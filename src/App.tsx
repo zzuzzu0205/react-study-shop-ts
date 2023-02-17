@@ -1,18 +1,27 @@
 import React from "react";
 import { useState } from "react";
-
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import data from "./data";
+import Detail from "./routes/Detail";
 function App() {
+  let [item] = useState<any>(data);
+  let navigate = useNavigate();
   return (
     <div className="App">
       <Navbar bg="white" variant="white" className="mainBar">
         <Container className="mainBarItm">
-          <Navbar.Brand href="#">SAMSUNG</Navbar.Brand>
+          <Navbar.Brand href="/">SAMSUNG</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#">제품</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("detail");
+              }}
+            >
+              제품
+            </Nav.Link>
             <Nav.Link href="#">이벤트선물하기</Nav.Link>
             <Nav.Link href="#">갤럭시캠퍼스스토어</Nav.Link>
             <Nav.Link href="#">e-식품관</Nav.Link>
@@ -20,13 +29,22 @@ function App() {
         </Container>
       </Navbar>
 
-      <div className="main-bg"></div>
-      <Item></Item>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <div className="main-bg"></div>
+              <Item item={item}></Item>
+            </>
+          }
+        />
+        <Route path="/detail:id" element={<Detail item={item} />} />
+      </Routes>
     </div>
   );
 }
-function Item() {
-  let [item] = useState<any>(data);
+function Item({ item }: { item: any }) {
   return (
     <>
       <div className="container">
