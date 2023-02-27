@@ -6,9 +6,17 @@ import "./App.css";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import data from "./data";
 import Detail from "./routes/Detail";
+
+export interface Item {
+  id: number;
+  title: string;
+  content: string;
+  price: number;
+}
 function App() {
-  let [item] = useState<any>(data);
+  let [item] = useState<Item[]>(data);
   let navigate = useNavigate();
+
   return (
     <div className="App">
       <Navbar bg="white" variant="white" className="mainBar">
@@ -39,12 +47,13 @@ function App() {
             </>
           }
         />
-        <Route path="/detail:id" element={<Detail item={item} />} />
+        <Route path="/detail/:id" element={<Detail item={item} />} />
       </Routes>
     </div>
   );
 }
 function Item({ item }: { item: any }) {
+  let navigate = useNavigate();
   return (
     <>
       <div className="container">
@@ -53,6 +62,9 @@ function Item({ item }: { item: any }) {
             return (
               <div className="col-md-4">
                 <img
+                  onClick={() => {
+                    navigate("detail/" + i);
+                  }}
                   src={process.env.PUBLIC_URL + "/" + i + ".png"}
                   width="80%"
                 />
