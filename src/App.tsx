@@ -4,6 +4,7 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import axios from "axios";
 import data from "./data";
 import Detail from "./routes/Detail";
 
@@ -14,7 +15,8 @@ export interface Item {
   price: number;
 }
 function App() {
-  let [item] = useState<Item[]>(data);
+  let [item, setItem] = useState<Item[]>(data);
+
   let navigate = useNavigate();
 
   return (
@@ -43,7 +45,7 @@ function App() {
           element={
             <>
               <div className="main-bg"></div>
-              <Item item={item}></Item>
+              <Item item={item} setItem={setItem}></Item>
             </>
           }
         />
@@ -52,20 +54,26 @@ function App() {
     </div>
   );
 }
-function Item({ item }: { item: any }) {
+function Item({ item, setItem }: { item: Item[]; setItem: any }) {
   let navigate = useNavigate();
+  let [addItem, setAdd] = useState<number>(2);
+  let [load, setLoad] = useState<number>(0);
   return (
     <>
       <div className="container">
         <div className="row">
-          {item.map(function (a: number, i: number) {
+          {item.map(function (a, i) {
             return (
               <div className="col-md-4">
                 <img
                   onClick={() => {
                     navigate("detail/" + i);
                   }}
-                  src={process.env.PUBLIC_URL + "/" + i + ".png"}
+                  src={
+                    "https://codingapple1.github.io/shop/shoes" +
+                    (i + 1) +
+                    ".jpg"
+                  }
                   width="80%"
                 />
                 <h4>{item[i].title}</h4>
@@ -75,6 +83,29 @@ function Item({ item }: { item: any }) {
           })}
         </div>
       </div>
+      {addItem < 4 ? (
+        <button
+          onClick={() => {
+            <div>{load === 0 && <div>로딩중</div>}</div>;
+            axios
+              .get(
+                "https://codingapple1.github.io/shop/data" + addItem + ".json"
+              )
+              .then((result) => {
+                let copy = [...item, ...result.data];
+                setItem(copy);
+                setAdd(addItem + 1);
+                setLoad(0);
+              })
+              .catch(() => {
+                console.log("실패");
+                setLoad(1);
+              });
+          }}
+        >
+          더보기..
+        </button>
+      ) : null}
     </>
   );
 }

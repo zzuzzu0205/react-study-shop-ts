@@ -48,7 +48,11 @@ function Detail({ item }: { item: Item[] }) {
       <div className="row">
         <div className="col-md-6">
           <img
-            src={process.env.PUBLIC_URL + "/" + searchId.id + ".png"}
+            src={
+              "https://codingapple1.github.io/shop/shoes" +
+              (searchId.id + 1) +
+              ".jpg"
+            }
             width="80%"
           />
         </div>
